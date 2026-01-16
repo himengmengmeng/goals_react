@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit2, Trash2, Target, Tag as TagIcon, Filter } from 'lucide-react';
+import { Plus, Edit2, Trash2, Target, Tag as TagIcon, Filter } from 'lucide-react';
 import { goalsService, tagsService } from '../services';
 import type { Goal, GoalCreate, GoalUpdate, Tag } from '../types';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Pagination from '../components/Pagination';
 import { AxiosError } from 'axios';
 import clsx from 'clsx';
+
+const PAGE_SIZE = 10;
 
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Not Started', color: 'bg-dark-600' },
@@ -40,6 +43,11 @@ const GoalsPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [formData, setFormData] = useState<GoalCreate>({
     title: '',
     description: '',
@@ -51,19 +59,25 @@ const GoalsPage: React.FC = () => {
   });
 
   // Fetch goals
-  const fetchGoals = useCallback(async () => {
+  const fetchGoals = useCallback(async (page: number = currentPage) => {
+    setIsLoading(true);
     try {
+      const skip = (page - 1) * PAGE_SIZE;
       const response = await goalsService.getAll({
         status: statusFilter || undefined,
         priority: priorityFilter || undefined,
+        skip,
+        limit: PAGE_SIZE,
       });
       setGoals(response.goals);
+      setTotalItems(response.total);
+      setTotalPages(Math.ceil(response.total / PAGE_SIZE));
     } catch (err) {
       console.error('Failed to fetch goals:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter]);
+  }, [statusFilter, priorityFilter, currentPage]);
 
   // Fetch tags
   const fetchTags = async () => {
@@ -76,9 +90,22 @@ const GoalsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchGoals();
     fetchTags();
-  }, [fetchGoals]);
+  }, []);
+
+  useEffect(() => {
+    fetchGoals(currentPage);
+  }, [currentPage, fetchGoals]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+    fetchGoals(1);
+  }, [statusFilter, priorityFilter]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const openCreateForm = () => {
     setSelectedGoal(null);
@@ -137,7 +164,7 @@ const GoalsPage: React.FC = () => {
         await goalsService.create(formData);
       }
       setIsFormOpen(false);
-      fetchGoals();
+      fetchGoals(currentPage);
     } catch (err) {
       const axiosError = err as AxiosError<{ detail: string }>;
       setError(axiosError.response?.data?.detail || 'An error occurred');
@@ -153,7 +180,7 @@ const GoalsPage: React.FC = () => {
     try {
       await goalsService.delete(selectedGoal.id);
       setIsDeleteOpen(false);
-      fetchGoals();
+      fetchGoals(currentPage);
     } catch (err) {
       console.error('Failed to delete goal:', err);
     } finally {
@@ -232,64 +259,75 @@ const GoalsPage: React.FC = () => {
           action={{ label: 'Add Goal', onClick: openCreateForm }}
         />
       ) : (
-        <div className="grid gap-4">
-          {goals.map((goal, index) => (
-            <div
-              key={goal.id}
-              className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={clsx('w-2.5 h-2.5 rounded-full', getStatusStyle(goal.status))} />
-                    <h3 className="text-lg font-semibold text-white">{goal.title}</h3>
-                  </div>
-                  {goal.description && (
-                    <p className="text-dark-300 mb-3 ml-5">{goal.description}</p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-4 ml-5">
-                    <span className={clsx('text-sm font-medium', getPriorityStyle(goal.priority))}>
-                      {PRIORITY_OPTIONS.find(o => o.value === goal.priority)?.label} Priority
-                    </span>
-                    <span className="text-sm text-dark-400">
-                      {STATUS_OPTIONS.find(o => o.value === goal.status)?.label}
-                    </span>
-                    {goal.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {goal.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
-                          >
-                            <TagIcon size={12} />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+        <>
+          <div className="grid gap-4">
+            {goals.map((goal, index) => (
+              <div
+                key={goal.id}
+                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={clsx('w-2.5 h-2.5 rounded-full', getStatusStyle(goal.status))} />
+                      <h3 className="text-lg font-semibold text-white">{goal.title}</h3>
+                    </div>
+                    {goal.description && (
+                      <p className="text-dark-300 mb-3 ml-5">{goal.description}</p>
                     )}
+                    <div className="flex flex-wrap items-center gap-4 ml-5">
+                      <span className={clsx('text-sm font-medium', getPriorityStyle(goal.priority))}>
+                        {PRIORITY_OPTIONS.find(o => o.value === goal.priority)?.label} Priority
+                      </span>
+                      <span className="text-sm text-dark-400">
+                        {STATUS_OPTIONS.find(o => o.value === goal.status)?.label}
+                      </span>
+                      {goal.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {goal.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
+                            >
+                              <TagIcon size={12} />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditForm(goal)}
-                    className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                    title="Edit"
-                  >
-                    <Edit2 size={18} />
-                  </button>
-                  <button
-                    onClick={() => openDeleteDialog(goal)}
-                    className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditForm(goal)}
+                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+                      title="Edit"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteDialog(goal)}
+                      className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            pageSize={PAGE_SIZE}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {/* Form Modal */}

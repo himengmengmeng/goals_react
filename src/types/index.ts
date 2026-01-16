@@ -119,6 +119,12 @@ export interface TaskListResponse {
 }
 
 // ==================== Word Types ====================
+export interface MediaFileInfo {
+  id: number;
+  file_url: string;
+  filename: string;
+}
+
 export interface Word {
   id: number;
   title: string;
@@ -127,7 +133,7 @@ export interface Word {
   creator_id: number;
   created_at: string;
   tags: string[];
-  media_files: string[];
+  media_files: MediaFileInfo[];
 }
 
 export interface WordCreate {
@@ -149,6 +155,12 @@ export interface WordListResponse {
   total: number;
   page: number;
   size: number;
+}
+
+export interface MediaFile {
+  id: number;
+  file_url: string;
+  uploaded_at: string;
 }
 
 // ==================== Tag Types ====================

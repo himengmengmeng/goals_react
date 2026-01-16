@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardLayout from './layouts/DashboardLayout';
 import WordsPage from './pages/WordsPage';
+import WordDetailPage from './pages/WordDetailPage';
 import WordTagsPage from './pages/WordTagsPage';
 import GoalsPage from './pages/GoalsPage';
 import TasksPage from './pages/TasksPage';
@@ -79,6 +80,7 @@ function App() {
       >
         <Route index element={<Navigate to="words" replace />} />
         <Route path="words" element={<WordsPage />} />
+        <Route path="words/:id" element={<WordDetailPage />} />
         <Route path="word-tags" element={<WordTagsPage />} />
         <Route path="goals" element={<GoalsPage />} />
         <Route path="tasks" element={<TasksPage />} />

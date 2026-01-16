@@ -24,7 +24,15 @@ const LoginPage: React.FC = () => {
       navigate('/dashboard/words');
     } catch (err) {
       const axiosError = err as AxiosError<{ detail: string }>;
-      setError(axiosError.response?.data?.detail || 'Login failed. Please check your credentials.');
+      const errorDetail = axiosError.response?.data?.detail;
+      // Show user-friendly error message
+      if (axiosError.response?.status === 401) {
+        setError('Username or password is incorrect');
+      } else if (errorDetail) {
+        setError(errorDetail);
+      } else {
+        setError('Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

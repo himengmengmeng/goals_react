@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit2, Trash2, BookOpen, Tag as TagIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Search, Edit2, Trash2, BookOpen, Tag as TagIcon, Eye } from 'lucide-react';
 import { wordsService, tagsService } from '../services';
 import type { Word, WordCreate, WordUpdate, Tag } from '../types';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Pagination from '../components/Pagination';
 import { AxiosError } from 'axios';
 
+const PAGE_SIZE = 10;
+
 const WordsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [words, setWords] = useState<Word[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +24,11 @@ const WordsPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [formData, setFormData] = useState<WordCreate>({
     title: '',
     explanation: '',
@@ -27,16 +37,24 @@ const WordsPage: React.FC = () => {
   });
 
   // Fetch words
-  const fetchWords = useCallback(async () => {
+  const fetchWords = useCallback(async (page: number = currentPage) => {
+    setIsLoading(true);
     try {
-      const response = await wordsService.getAll({ search: search || undefined });
+      const skip = (page - 1) * PAGE_SIZE;
+      const response = await wordsService.getAll({ 
+        search: search || undefined,
+        skip,
+        limit: PAGE_SIZE,
+      });
       setWords(response.words);
+      setTotalItems(response.total);
+      setTotalPages(Math.ceil(response.total / PAGE_SIZE));
     } catch (err) {
       console.error('Failed to fetch words:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [search]);
+  }, [search, currentPage]);
 
   // Fetch tags for dropdown
   const fetchTags = async () => {
@@ -49,17 +67,25 @@ const WordsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchWords();
     fetchTags();
-  }, [fetchWords]);
+  }, []);
 
-  // Debounced search
+  useEffect(() => {
+    fetchWords(currentPage);
+  }, [currentPage, fetchWords]);
+
+  // Debounced search - reset to page 1 when searching
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchWords();
+      setCurrentPage(1);
+      fetchWords(1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, fetchWords]);
+  }, [search]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const openCreateForm = () => {
     setSelectedWord(null);
@@ -86,6 +112,10 @@ const WordsPage: React.FC = () => {
     setIsDeleteOpen(true);
   };
 
+  const viewWordDetail = (word: Word) => {
+    navigate(`/dashboard/words/${word.id}`);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -106,7 +136,7 @@ const WordsPage: React.FC = () => {
         await wordsService.create(formData);
       }
       setIsFormOpen(false);
-      fetchWords();
+      fetchWords(currentPage);
     } catch (err) {
       const axiosError = err as AxiosError<{ detail: string }>;
       setError(axiosError.response?.data?.detail || 'An error occurred');
@@ -122,7 +152,7 @@ const WordsPage: React.FC = () => {
     try {
       await wordsService.delete(selectedWord.id);
       setIsDeleteOpen(false);
-      fetchWords();
+      fetchWords(currentPage);
     } catch (err) {
       console.error('Failed to delete word:', err);
     } finally {
@@ -160,7 +190,7 @@ const WordsPage: React.FC = () => {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search words..."
+          placeholder="Search words, explanations, notes..."
           className="input pl-12"
         />
       </div>
@@ -176,54 +206,73 @@ const WordsPage: React.FC = () => {
           action={{ label: 'Add Word', onClick: openCreateForm }}
         />
       ) : (
-        <div className="grid gap-4">
-          {words.map((word, index) => (
-            <div
-              key={word.id}
-              className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-white mb-2">{word.title}</h3>
-                  <p className="text-dark-300 mb-3">{word.explanation}</p>
-                  {word.notes && (
-                    <p className="text-sm text-dark-400 italic mb-3">"{word.notes}"</p>
-                  )}
-                  {word.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {word.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
-                        >
-                          <TagIcon size={12} />
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditForm(word)}
-                    className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                    title="Edit"
-                  >
-                    <Edit2 size={18} />
-                  </button>
-                  <button
-                    onClick={() => openDeleteDialog(word)}
-                    className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+        <>
+          <div className="grid gap-4">
+            {words.map((word, index) => (
+              <div
+                key={word.id}
+                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up cursor-pointer"
+                style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => viewWordDetail(word)}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-white mb-2">{word.title}</h3>
+                    <p className="text-dark-300 mb-3 line-clamp-2">{word.explanation}</p>
+                    {word.notes && (
+                      <p className="text-sm text-dark-400 italic mb-3 line-clamp-1">"{word.notes}"</p>
+                    )}
+                    {word.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {word.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
+                          >
+                            <TagIcon size={12} />
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={() => viewWordDetail(word)}
+                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+                      title="View Details"
+                    >
+                      <Eye size={18} />
+                    </button>
+                    <button
+                      onClick={() => openEditForm(word)}
+                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+                      title="Edit"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteDialog(word)}
+                      className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            pageSize={PAGE_SIZE}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {/* Form Modal */}

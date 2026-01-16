@@ -6,8 +6,11 @@ import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Pagination from '../components/Pagination';
 import { AxiosError } from 'axios';
 import clsx from 'clsx';
+
+const PAGE_SIZE = 10;
 
 const STATUS_OPTIONS = [
   { value: 'not_done', label: 'Not Done', color: 'bg-dark-600' },
@@ -41,6 +44,11 @@ const TasksPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [formData, setFormData] = useState<TaskCreate>({
     name: '',
     description: '',
@@ -52,20 +60,26 @@ const TasksPage: React.FC = () => {
   });
 
   // Fetch tasks
-  const fetchTasks = useCallback(async () => {
+  const fetchTasks = useCallback(async (page: number = currentPage) => {
+    setIsLoading(true);
     try {
+      const skip = (page - 1) * PAGE_SIZE;
       const response = await tasksService.getAll({
         status: statusFilter || undefined,
         priority: priorityFilter || undefined,
         goal_id: goalFilter ? parseInt(goalFilter) : undefined,
+        skip,
+        limit: PAGE_SIZE,
       });
       setTasks(response.tasks);
+      setTotalItems(response.total);
+      setTotalPages(Math.ceil(response.total / PAGE_SIZE));
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, goalFilter]);
+  }, [statusFilter, priorityFilter, goalFilter, currentPage]);
 
   // Fetch tags and goals
   const fetchTagsAndGoals = async () => {
@@ -82,9 +96,22 @@ const TasksPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchTasks();
     fetchTagsAndGoals();
-  }, [fetchTasks]);
+  }, []);
+
+  useEffect(() => {
+    fetchTasks(currentPage);
+  }, [currentPage, fetchTasks]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+    fetchTasks(1);
+  }, [statusFilter, priorityFilter, goalFilter]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const openCreateForm = () => {
     setSelectedTask(null);
@@ -143,7 +170,7 @@ const TasksPage: React.FC = () => {
         await tasksService.create(formData);
       }
       setIsFormOpen(false);
-      fetchTasks();
+      fetchTasks(currentPage);
     } catch (err) {
       const axiosError = err as AxiosError<{ detail: string }>;
       setError(axiosError.response?.data?.detail || 'An error occurred');
@@ -159,7 +186,7 @@ const TasksPage: React.FC = () => {
     try {
       await tasksService.delete(selectedTask.id);
       setIsDeleteOpen(false);
-      fetchTasks();
+      fetchTasks(currentPage);
     } catch (err) {
       console.error('Failed to delete task:', err);
     } finally {
@@ -248,70 +275,81 @@ const TasksPage: React.FC = () => {
           action={{ label: 'Add Task', onClick: openCreateForm }}
         />
       ) : (
-        <div className="grid gap-4">
-          {tasks.map((task, index) => (
-            <div
-              key={task.id}
-              className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={clsx('w-2.5 h-2.5 rounded-full', getStatusStyle(task.status))} />
-                    <h3 className="text-lg font-semibold text-white">{task.name}</h3>
-                  </div>
-                  {task.description && (
-                    <p className="text-dark-300 mb-3 ml-5">{task.description}</p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-4 ml-5">
-                    <span className={clsx('text-sm font-medium', getPriorityStyle(task.priority))}>
-                      {PRIORITY_OPTIONS.find(o => o.value === task.priority)?.label} Priority
-                    </span>
-                    <span className="text-sm text-dark-400">
-                      {STATUS_OPTIONS.find(o => o.value === task.status)?.label}
-                    </span>
-                    {task.goal_title && (
-                      <span className="inline-flex items-center gap-1 text-sm text-dark-300">
-                        <LinkIcon size={14} />
-                        {task.goal_title}
+        <>
+          <div className="grid gap-4">
+            {tasks.map((task, index) => (
+              <div
+                key={task.id}
+                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={clsx('w-2.5 h-2.5 rounded-full', getStatusStyle(task.status))} />
+                      <h3 className="text-lg font-semibold text-white">{task.name}</h3>
+                    </div>
+                    {task.description && (
+                      <p className="text-dark-300 mb-3 ml-5">{task.description}</p>
+                    )}
+                    <div className="flex flex-wrap items-center gap-4 ml-5">
+                      <span className={clsx('text-sm font-medium', getPriorityStyle(task.priority))}>
+                        {PRIORITY_OPTIONS.find(o => o.value === task.priority)?.label} Priority
                       </span>
-                    )}
-                    {task.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {task.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
-                          >
-                            <TagIcon size={12} />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                      <span className="text-sm text-dark-400">
+                        {STATUS_OPTIONS.find(o => o.value === task.status)?.label}
+                      </span>
+                      {task.goal_title && (
+                        <span className="inline-flex items-center gap-1 text-sm text-dark-300">
+                          <LinkIcon size={14} />
+                          {task.goal_title}
+                        </span>
+                      )}
+                      {task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {task.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-500/10 text-primary-400 text-xs font-medium rounded-full"
+                            >
+                              <TagIcon size={12} />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditForm(task)}
-                    className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                    title="Edit"
-                  >
-                    <Edit2 size={18} />
-                  </button>
-                  <button
-                    onClick={() => openDeleteDialog(task)}
-                    className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditForm(task)}
+                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+                      title="Edit"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteDialog(task)}
+                      className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            pageSize={PAGE_SIZE}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {/* Form Modal */}
