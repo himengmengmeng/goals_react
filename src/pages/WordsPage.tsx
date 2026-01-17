@@ -18,6 +18,7 @@ const WordsPage: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [tagFilter, setTagFilter] = useState<string>('');
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -43,6 +44,7 @@ const WordsPage: React.FC = () => {
       const skip = (page - 1) * PAGE_SIZE;
       const response = await wordsService.getAll({ 
         search: search || undefined,
+        tag_id: tagFilter ? parseInt(tagFilter) : undefined,
         skip,
         limit: PAGE_SIZE,
       });
@@ -54,7 +56,7 @@ const WordsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [search, currentPage]);
+  }, [search, tagFilter, currentPage]);
 
   // Fetch tags for dropdown
   const fetchTags = async () => {
@@ -82,6 +84,12 @@ const WordsPage: React.FC = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [search]);
+
+  // Reset to page 1 when tag filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+    fetchWords(1);
+  }, [tagFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -183,16 +191,28 @@ const WordsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search words, explanations, notes..."
-          className="input pl-12"
-        />
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search words, explanations, notes..."
+            className="input pl-12"
+          />
+        </div>
+        <select
+          value={tagFilter}
+          onChange={(e) => setTagFilter(e.target.value)}
+          className="input max-w-[180px]"
+        >
+          <option value="">All Tags</option>
+          {tags.map(tag => (
+            <option key={tag.id} value={tag.id}>{tag.name}</option>
+          ))}
+        </select>
       </div>
 
       {/* Words list */}

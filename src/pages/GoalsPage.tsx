@@ -37,6 +37,7 @@ const GoalsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
+  const [tagFilter, setTagFilter] = useState<string>('');
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -66,6 +67,7 @@ const GoalsPage: React.FC = () => {
       const response = await goalsService.getAll({
         status: statusFilter || undefined,
         priority: priorityFilter || undefined,
+        tag_id: tagFilter ? parseInt(tagFilter) : undefined,
         skip,
         limit: PAGE_SIZE,
       });
@@ -77,7 +79,7 @@ const GoalsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, currentPage]);
+  }, [statusFilter, priorityFilter, tagFilter, currentPage]);
 
   // Fetch tags
   const fetchTags = async () => {
@@ -101,7 +103,7 @@ const GoalsPage: React.FC = () => {
   useEffect(() => {
     setCurrentPage(1);
     fetchGoals(1);
-  }, [statusFilter, priorityFilter]);
+  }, [statusFilter, priorityFilter, tagFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -244,6 +246,16 @@ const GoalsPage: React.FC = () => {
           <option value="">All Priority</option>
           {PRIORITY_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+        <select
+          value={tagFilter}
+          onChange={(e) => setTagFilter(e.target.value)}
+          className="input py-2 pr-8 min-w-[140px]"
+        >
+          <option value="">All Tags</option>
+          {tags.map(tag => (
+            <option key={tag.id} value={tag.id}>{tag.name}</option>
           ))}
         </select>
       </div>

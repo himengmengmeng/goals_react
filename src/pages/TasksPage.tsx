@@ -38,6 +38,7 @@ const TasksPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [goalFilter, setGoalFilter] = useState<string>('');
+  const [tagFilter, setTagFilter] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -68,6 +69,7 @@ const TasksPage: React.FC = () => {
         status: statusFilter || undefined,
         priority: priorityFilter || undefined,
         goal_id: goalFilter ? parseInt(goalFilter) : undefined,
+        tag_id: tagFilter ? parseInt(tagFilter) : undefined,
         skip,
         limit: PAGE_SIZE,
       });
@@ -79,7 +81,7 @@ const TasksPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, goalFilter, currentPage]);
+  }, [statusFilter, priorityFilter, goalFilter, tagFilter, currentPage]);
 
   // Fetch tags and goals
   const fetchTagsAndGoals = async () => {
@@ -107,7 +109,7 @@ const TasksPage: React.FC = () => {
   useEffect(() => {
     setCurrentPage(1);
     fetchTasks(1);
-  }, [statusFilter, priorityFilter, goalFilter]);
+  }, [statusFilter, priorityFilter, goalFilter, tagFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -260,6 +262,16 @@ const TasksPage: React.FC = () => {
           <option value="">All Goals</option>
           {goals.map(goal => (
             <option key={goal.id} value={goal.id}>{goal.title}</option>
+          ))}
+        </select>
+        <select
+          value={tagFilter}
+          onChange={(e) => setTagFilter(e.target.value)}
+          className="input py-2 pr-8 min-w-[140px]"
+        >
+          <option value="">All Tags</option>
+          {tags.map(tag => (
+            <option key={tag.id} value={tag.id}>{tag.name}</option>
           ))}
         </select>
       </div>

@@ -7,6 +7,7 @@ export const tasksService = {
     status?: string; 
     priority?: string;
     goal_id?: number;
+    tag_id?: number;
   }): Promise<TaskListResponse> => {
     const response = await api.get<TaskListResponse>('/api/tasks/', { params });
     return response.data;
