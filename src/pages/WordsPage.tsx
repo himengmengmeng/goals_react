@@ -10,7 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Pagination from '../components/Pagination';
 import { AxiosError } from 'axios';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 80;
 
 const WordsPage: React.FC = () => {
   const navigate = useNavigate();
