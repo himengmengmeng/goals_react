@@ -4,17 +4,7 @@ A comprehensive reference for building React frontends and Django + FastAPI back
 
 ---
 
-## Table of Contents
-
-- [Part 1: React Frontend — Implementation Order](#part-1-react-frontend--implementation-order)
-- [Part 2: Django + FastAPI Backend — Implementation Order](#part-2-django--fastapi-backend--implementation-order)
-- [Part 3: The Critical Async Pattern (Django + FastAPI)](#part-3-the-critical-async-pattern-django--fastapi)
-- [Part 4: AI Prompt Templates](#part-4-ai-prompt-templates)
-- [Part 5: Common Pitfalls & Reminders](#part-5-common-pitfalls--reminders)
-
----
-
-## Part 1: React Frontend — Implementation Order
+React Frontend — Implementation Order
 
 **Prerequisite:** Backend API and request/response contracts are ready.
 
