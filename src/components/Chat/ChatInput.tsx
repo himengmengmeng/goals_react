@@ -173,17 +173,15 @@ const ChatInput: React.FC<ChatInputProps> = ({
             </button>
 
             {/* Text input (shows live transcript) */}
-            <div className="flex-1 relative">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                readOnly
-                rows={1}
-                className="w-full px-3 py-[7px] bg-dark-800 border border-red-500/30 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none leading-[18px]"
-                style={{ maxHeight: '120px' }}
-                placeholder="Listening..."
-              />
-            </div>
+            <textarea
+              ref={textareaRef}
+              value={input}
+              readOnly
+              rows={1}
+              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-red-500/30 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none leading-[18px] block"
+              style={{ maxHeight: '120px' }}
+              placeholder="Listening..."
+            />
 
             {/* Confirm button */}
             <button
@@ -209,19 +207,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
             )}
 
             {/* Text input */}
-            <div className="flex-1 relative">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                disabled={disabled}
-                rows={1}
-                className="w-full px-3 py-[7px] bg-dark-800 border border-dark-700 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed leading-[18px]"
-                style={{ maxHeight: '120px' }}
-              />
-            </div>
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              disabled={disabled}
+              rows={1}
+              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-dark-700 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed leading-[18px] block"
+              style={{ maxHeight: '120px' }}
+            />
 
             {/* Send button */}
             <button
