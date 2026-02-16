@@ -13,6 +13,7 @@ import {
   User
 } from 'lucide-react';
 import clsx from 'clsx';
+import ChatButton from '../components/Chat/ChatButton';
 
 interface NavItem {
   label: string;
@@ -148,7 +149,12 @@ const DashboardLayout: React.FC = () => {
           </button>
 
           {/* Spacer */}
-          <div className="hidden lg:block" />
+          <div className="hidden lg:block flex-1" />
+
+          {/* Right side actions */}
+          <div className="flex items-center gap-3">
+          {/* AI Chat Button */}
+          <ChatButton />
 
           {/* User menu */}
           <div className="relative">
@@ -190,6 +196,7 @@ const DashboardLayout: React.FC = () => {
                 </div>
               </>
             )}
+          </div>
           </div>
         </header>
 
