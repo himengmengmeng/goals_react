@@ -160,13 +160,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       )}
 
-      <div className="flex items-end gap-2 p-3">
+      <div className="flex items-center gap-2 p-3">
         {isRecording ? (
           <>
             {/* Cancel button */}
             <button
               onClick={cancelRecording}
-              className="flex-shrink-0 p-2 rounded-lg bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+              className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
               title="Discard recording"
             >
               <X size={18} />
@@ -179,7 +179,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                 value={input}
                 readOnly
                 rows={1}
-                className="w-full px-3 py-2 bg-dark-800 border border-red-500/30 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none"
+                className="w-full px-3 py-2 bg-dark-800 border border-red-500/30 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none leading-[18px]"
                 style={{ maxHeight: '120px' }}
                 placeholder="Listening..."
               />
@@ -188,7 +188,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             {/* Confirm button */}
             <button
               onClick={confirmRecording}
-              className="flex-shrink-0 p-2 rounded-lg bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors"
+              className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors"
               title="Accept recording"
             >
               <Check size={18} />
@@ -201,7 +201,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               <button
                 onClick={startRecording}
                 disabled={disabled}
-                className="flex-shrink-0 p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center rounded-lg text-dark-400 hover:text-white hover:bg-dark-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Voice input"
               >
                 <Mic size={18} />
@@ -218,7 +218,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                 placeholder={placeholder}
                 disabled={disabled}
                 rows={1}
-                className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed leading-[18px]"
                 style={{ maxHeight: '120px' }}
               />
             </div>
@@ -227,7 +227,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             <button
               onClick={handleSend}
               disabled={!input.trim() || disabled}
-              className="flex-shrink-0 p-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-primary-500"
+              className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-primary-500"
             >
               {disabled ? <Square size={18} /> : <Send size={18} />}
             </button>
