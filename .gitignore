@@ -25,3 +25,6 @@ npm-debug.log*
 
 # Debug
 .cursor/
+
+# Plan files
+*.plan.md
