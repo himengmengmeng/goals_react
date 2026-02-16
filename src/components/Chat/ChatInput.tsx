@@ -110,7 +110,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
     if (recognitionRef.current) {
       const ref = recognitionRef.current;
       recognitionRef.current = null;
+      ref.onresult = null;
       ref.onend = null;
+      ref.onerror = null;
       ref.stop();
     }
     setIsRecording(false);
@@ -125,9 +127,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   const cancelRecording = () => {
-    // Restore input to what it was before recording
-    setInput(preRecordingInputRef.current);
+    // Stop first to prevent any last onresult from firing
     stopRecording();
+    // Then restore input to what it was before recording
+    setInput(preRecordingInputRef.current);
   };
 
   // Cleanup on unmount
