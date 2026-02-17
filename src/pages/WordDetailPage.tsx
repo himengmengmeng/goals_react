@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Trash2, Upload, X, Tag as TagIcon, Save,
@@ -88,6 +88,20 @@ const WordDetailPage: React.FC = () => {
       JSON.stringify([...formData.tagIds].sort()) !== JSON.stringify([...originalData.tagIds].sort())
     );
   }, [formData, originalData]);
+
+  const explanationRef = useRef<HTMLTextAreaElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, []);
+
+  useEffect(() => {
+    autoResize(explanationRef.current);
+    autoResize(notesRef.current);
+  }, [formData.explanation, formData.notes, autoResize]);
 
   const handleSave = async () => {
     if (!word || !hasChanges) return;
@@ -244,9 +258,10 @@ const WordDetailPage: React.FC = () => {
         <div>
           <label className="label">Explanation <span className="text-red-400">*</span></label>
           <textarea
+            ref={explanationRef}
             value={formData.explanation}
             onChange={(e) => setFormData(prev => ({ ...prev, explanation: e.target.value }))}
-            className="input min-h-[150px] resize-y text-base leading-relaxed"
+            className="input min-h-[60px] resize-none text-base leading-relaxed overflow-hidden"
             placeholder="Enter the explanation or definition"
             required
           />
@@ -256,9 +271,10 @@ const WordDetailPage: React.FC = () => {
         <div>
           <label className="label">Notes</label>
           <textarea
+            ref={notesRef}
             value={formData.notes}
             onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-            className="input min-h-[100px] resize-y"
+            className="input min-h-[40px] resize-none overflow-hidden"
             placeholder="Add personal notes, example sentences, etc."
           />
         </div>

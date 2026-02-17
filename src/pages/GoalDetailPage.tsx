@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Save, Tag as TagIcon, Calendar } from 'lucide-react';
 import { goalsService, tagsService } from '../services';
@@ -109,6 +109,20 @@ const GoalDetailPage: React.FC = () => {
       JSON.stringify([...formData.tagIds].sort()) !== JSON.stringify([...originalData.tagIds].sort())
     );
   }, [formData, originalData]);
+
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, []);
+
+  useEffect(() => {
+    autoResize(descriptionRef.current);
+    autoResize(notesRef.current);
+  }, [formData.description, formData.notes, autoResize]);
 
   const handleSave = async () => {
     if (!goal || !hasChanges) return;
@@ -224,9 +238,10 @@ const GoalDetailPage: React.FC = () => {
         <div>
           <label className="label">Description</label>
           <textarea
+            ref={descriptionRef}
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            className="input min-h-[120px] resize-y"
+            className="input min-h-[40px] resize-none overflow-hidden"
             placeholder="Describe your goal"
           />
         </div>
@@ -235,9 +250,10 @@ const GoalDetailPage: React.FC = () => {
         <div>
           <label className="label">Notes</label>
           <textarea
+            ref={notesRef}
             value={formData.notes}
             onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-            className="input min-h-[80px] resize-y"
+            className="input min-h-[40px] resize-none overflow-hidden"
             placeholder="Additional notes"
           />
         </div>

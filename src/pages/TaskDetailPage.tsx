@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Save, Tag as TagIcon, Calendar, Link as LinkIcon } from 'lucide-react';
 import { tasksService, tagsService, goalsService } from '../services';
@@ -111,6 +111,18 @@ const TaskDetailPage: React.FC = () => {
       JSON.stringify([...formData.tagIds].sort()) !== JSON.stringify([...originalData.tagIds].sort())
     );
   }, [formData, originalData]);
+
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, []);
+
+  useEffect(() => {
+    autoResize(descriptionRef.current);
+  }, [formData.description, autoResize]);
 
   const handleSave = async () => {
     if (!task || !hasChanges) return;
@@ -239,9 +251,10 @@ const TaskDetailPage: React.FC = () => {
         <div>
           <label className="label">Description</label>
           <textarea
+            ref={descriptionRef}
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            className="input min-h-[120px] resize-y"
+            className="input min-h-[40px] resize-none overflow-hidden"
             placeholder="Describe your task"
           />
         </div>
