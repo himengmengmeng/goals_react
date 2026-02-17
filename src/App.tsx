@@ -7,7 +7,9 @@ import WordsPage from './pages/WordsPage';
 import WordDetailPage from './pages/WordDetailPage';
 import WordTagsPage from './pages/WordTagsPage';
 import GoalsPage from './pages/GoalsPage';
+import GoalDetailPage from './pages/GoalDetailPage';
 import TasksPage from './pages/TasksPage';
+import TaskDetailPage from './pages/TaskDetailPage';
 import GoalTagsPage from './pages/GoalTagsPage';
 
 // Protected Route wrapper
@@ -83,7 +85,9 @@ function App() {
         <Route path="words/:id" element={<WordDetailPage />} />
         <Route path="word-tags" element={<WordTagsPage />} />
         <Route path="goals" element={<GoalsPage />} />
+        <Route path="goals/:id" element={<GoalDetailPage />} />
         <Route path="tasks" element={<TasksPage />} />
+        <Route path="tasks/:id" element={<TaskDetailPage />} />
         <Route path="goal-tags" element={<GoalTagsPage />} />
       </Route>
 

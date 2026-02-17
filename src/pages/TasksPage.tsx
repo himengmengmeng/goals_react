@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Edit2, Trash2, CheckSquare, Tag as TagIcon, Filter, Link as LinkIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Trash2, CheckSquare, Tag as TagIcon, Filter, Link as LinkIcon } from 'lucide-react';
 import { tasksService, tagsService, goalsService } from '../services';
-import type { Task, TaskCreate, TaskUpdate, Tag, Goal } from '../types';
+import type { Task, TaskCreate, Tag, Goal } from '../types';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
@@ -31,6 +32,7 @@ const URGENCY_OPTIONS = [
 ];
 
 const TasksPage: React.FC = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -130,22 +132,6 @@ const TasksPage: React.FC = () => {
     setIsFormOpen(true);
   };
 
-  const openEditForm = (task: Task) => {
-    setSelectedTask(task);
-    const tagIds = tags.filter(t => task.tags.includes(t.name)).map(t => t.id);
-    setFormData({
-      name: task.name,
-      description: task.description || '',
-      goal_id: task.goal_id || undefined,
-      status: task.status,
-      priority: task.priority,
-      urgency: task.urgency,
-      tags: tagIds,
-    });
-    setError('');
-    setIsFormOpen(true);
-  };
-
   const openDeleteDialog = (task: Task) => {
     setSelectedTask(task);
     setIsDeleteOpen(true);
@@ -157,20 +143,7 @@ const TasksPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      if (selectedTask) {
-        const updateData: TaskUpdate = {
-          name: formData.name,
-          description: formData.description || undefined,
-          goal_id: formData.goal_id || 0, // 0 to clear
-          status: formData.status,
-          priority: formData.priority,
-          urgency: formData.urgency,
-          tags: formData.tags,
-        };
-        await tasksService.update(selectedTask.id, updateData);
-      } else {
-        await tasksService.create(formData);
-      }
+      await tasksService.create(formData);
       setIsFormOpen(false);
       fetchTasks(currentPage);
     } catch (err) {
@@ -292,8 +265,9 @@ const TasksPage: React.FC = () => {
             {tasks.map((task, index) => (
               <div
                 key={task.id}
-                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
+                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up cursor-pointer"
                 style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => navigate(`/dashboard/tasks/${task.id}`)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -334,14 +308,7 @@ const TasksPage: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => openEditForm(task)}
-                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      onClick={() => openDeleteDialog(task)}
+                      onClick={(e) => { e.stopPropagation(); openDeleteDialog(task); }}
                       className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                       title="Delete"
                     >
@@ -368,7 +335,7 @@ const TasksPage: React.FC = () => {
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={selectedTask ? 'Edit Task' : 'Add New Task'}
+        title="Add New Task"
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -490,7 +457,7 @@ const TasksPage: React.FC = () => {
               Cancel
             </button>
             <button type="submit" disabled={isSubmitting} className="btn-primary">
-              {isSubmitting ? <span className="spinner" /> : selectedTask ? 'Update' : 'Create'}
+              {isSubmitting ? <span className="spinner" /> : 'Create'}
             </button>
           </div>
         </form>

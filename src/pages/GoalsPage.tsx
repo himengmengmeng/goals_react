@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Edit2, Trash2, Target, Tag as TagIcon, Filter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Trash2, Target, Tag as TagIcon, Filter } from 'lucide-react';
 import { goalsService, tagsService } from '../services';
-import type { Goal, GoalCreate, GoalUpdate, Tag } from '../types';
+import type { Goal, GoalCreate, Tag } from '../types';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
@@ -32,6 +33,7 @@ const URGENCY_OPTIONS = [
 ];
 
 const GoalsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -124,22 +126,6 @@ const GoalsPage: React.FC = () => {
     setIsFormOpen(true);
   };
 
-  const openEditForm = (goal: Goal) => {
-    setSelectedGoal(goal);
-    const tagIds = tags.filter(t => goal.tags.includes(t.name)).map(t => t.id);
-    setFormData({
-      title: goal.title,
-      description: goal.description || '',
-      notes: goal.notes || '',
-      status: goal.status,
-      priority: goal.priority,
-      urgency: goal.urgency,
-      tags: tagIds,
-    });
-    setError('');
-    setIsFormOpen(true);
-  };
-
   const openDeleteDialog = (goal: Goal) => {
     setSelectedGoal(goal);
     setIsDeleteOpen(true);
@@ -151,20 +137,7 @@ const GoalsPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      if (selectedGoal) {
-        const updateData: GoalUpdate = {
-          title: formData.title,
-          description: formData.description || undefined,
-          notes: formData.notes || undefined,
-          status: formData.status,
-          priority: formData.priority,
-          urgency: formData.urgency,
-          tags: formData.tags,
-        };
-        await goalsService.update(selectedGoal.id, updateData);
-      } else {
-        await goalsService.create(formData);
-      }
+      await goalsService.create(formData);
       setIsFormOpen(false);
       fetchGoals(currentPage);
     } catch (err) {
@@ -276,8 +249,9 @@ const GoalsPage: React.FC = () => {
             {goals.map((goal, index) => (
               <div
                 key={goal.id}
-                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up"
+                className="card hover:border-dark-700 transition-all duration-200 animate-slide-up cursor-pointer"
                 style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => navigate(`/dashboard/goals/${goal.id}`)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -312,14 +286,7 @@ const GoalsPage: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => openEditForm(goal)}
-                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      onClick={() => openDeleteDialog(goal)}
+                      onClick={(e) => { e.stopPropagation(); openDeleteDialog(goal); }}
                       className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                       title="Delete"
                     >
@@ -346,7 +313,7 @@ const GoalsPage: React.FC = () => {
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={selectedGoal ? 'Edit Goal' : 'Add New Goal'}
+        title="Add New Goal"
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -461,7 +428,7 @@ const GoalsPage: React.FC = () => {
               Cancel
             </button>
             <button type="submit" disabled={isSubmitting} className="btn-primary">
-              {isSubmitting ? <span className="spinner" /> : selectedGoal ? 'Update' : 'Create'}
+              {isSubmitting ? <span className="spinner" /> : 'Create'}
             </button>
           </div>
         </form>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Edit2, Trash2, BookOpen, Tag as TagIcon, Eye } from 'lucide-react';
+import { Plus, Search, Trash2, BookOpen, Tag as TagIcon } from 'lucide-react';
 import { wordsService, tagsService } from '../services';
-import type { Word, WordCreate, WordUpdate, Tag } from '../types';
+import type { Word, WordCreate, Tag } from '../types';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
@@ -102,26 +102,9 @@ const WordsPage: React.FC = () => {
     setIsFormOpen(true);
   };
 
-  const openEditForm = (word: Word) => {
-    setSelectedWord(word);
-    const tagIds = tags.filter(t => word.tags.includes(t.name)).map(t => t.id);
-    setFormData({
-      title: word.title,
-      explanation: word.explanation,
-      notes: word.notes || '',
-      tags: tagIds,
-    });
-    setError('');
-    setIsFormOpen(true);
-  };
-
   const openDeleteDialog = (word: Word) => {
     setSelectedWord(word);
     setIsDeleteOpen(true);
-  };
-
-  const viewWordDetail = (word: Word) => {
-    navigate(`/dashboard/words/${word.id}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -130,19 +113,7 @@ const WordsPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      if (selectedWord) {
-        // Update
-        const updateData: WordUpdate = {
-          title: formData.title,
-          explanation: formData.explanation,
-          notes: formData.notes || undefined,
-          tags: formData.tags,
-        };
-        await wordsService.update(selectedWord.id, updateData);
-      } else {
-        // Create
-        await wordsService.create(formData);
-      }
+      await wordsService.create(formData);
       setIsFormOpen(false);
       fetchWords(currentPage);
     } catch (err) {
@@ -233,7 +204,7 @@ const WordsPage: React.FC = () => {
                 key={word.id}
                 className="card hover:border-dark-700 transition-all duration-200 animate-slide-up cursor-pointer"
                 style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => viewWordDetail(word)}
+                onClick={() => navigate(`/dashboard/words/${word.id}`)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -256,23 +227,9 @@ const WordsPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => viewWordDetail(word)}
-                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                      title="View Details"
-                    >
-                      <Eye size={18} />
-                    </button>
-                    <button
-                      onClick={() => openEditForm(word)}
-                      className="p-2 text-dark-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      onClick={() => openDeleteDialog(word)}
+                      onClick={(e) => { e.stopPropagation(); openDeleteDialog(word); }}
                       className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                       title="Delete"
                     >
@@ -299,7 +256,7 @@ const WordsPage: React.FC = () => {
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={selectedWord ? 'Edit Word' : 'Add New Word'}
+        title="Add New Word"
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -378,7 +335,7 @@ const WordsPage: React.FC = () => {
               Cancel
             </button>
             <button type="submit" disabled={isSubmitting} className="btn-primary">
-              {isSubmitting ? <span className="spinner" /> : selectedWord ? 'Update' : 'Create'}
+              {isSubmitting ? <span className="spinner" /> : 'Create'}
             </button>
           </div>
         </form>
