@@ -289,7 +289,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
               <h2 className="text-sm font-medium text-white truncate">
                 {activeConversationId
                   ? conversations.find((c) => c.id === activeConversationId)?.name || 'New Chat'
-                  : 'AI Assistant'}
+                  : 'XMeng'}
               </h2>
             </div>
             <div className="flex items-center gap-1">
@@ -323,7 +323,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
                       <path d="M10 22h4" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-white mb-2">AI Assistant</h3>
+                  <h3 className="text-lg font-medium text-white mb-2">XMeng</h3>
                   <p className="text-sm text-dark-400">
                     Ask me anything! I can help you manage goals, tasks, and vocabulary, or just chat.
                   </p>
