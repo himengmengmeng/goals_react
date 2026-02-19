@@ -11,7 +11,7 @@ const ChatButton: React.FC = () => {
       <button
         onClick={() => setIsChatOpen(true)}
         className="relative p-2 rounded-lg bg-primary-500/10 text-primary-400 hover:bg-primary-500/20 hover:text-primary-300 transition-all duration-200 group"
-        title="AI Assistant"
+        title="XMeng"
       >
         <MessageCircle size={20} />
         {/* Pulse indicator */}
