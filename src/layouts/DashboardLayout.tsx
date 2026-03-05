@@ -30,7 +30,7 @@ const navSections: NavSection[] = [
   {
     title: 'Vocabulary',
     items: [
-      { label: 'English Words', path: '/dashboard/words', icon: <BookOpen size={20} /> },
+      { label: 'Vocabulary', path: '/dashboard/words', icon: <BookOpen size={20} /> },
       { label: 'Word Tags', path: '/dashboard/word-tags', icon: <Tag size={20} /> },
     ],
   },
