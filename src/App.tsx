@@ -11,6 +11,7 @@ import GoalDetailPage from './pages/GoalDetailPage';
 import TasksPage from './pages/TasksPage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import GoalTagsPage from './pages/GoalTagsPage';
+import EmailPage from './pages/EmailPage';
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -89,6 +90,7 @@ function App() {
         <Route path="tasks" element={<TasksPage />} />
         <Route path="tasks/:id" element={<TaskDetailPage />} />
         <Route path="goal-tags" element={<GoalTagsPage />} />
+        <Route path="emails" element={<EmailPage />} />
       </Route>
 
       {/* Default redirect */}

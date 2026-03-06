@@ -10,7 +10,8 @@ import {
   Menu, 
   X,
   ChevronDown,
-  User
+  User,
+  Mail,
 } from 'lucide-react';
 import clsx from 'clsx';
 import ChatButton from '../components/Chat/ChatButton';
@@ -32,6 +33,7 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Vocabulary', path: '/dashboard/words', icon: <BookOpen size={20} /> },
       { label: 'Word Tags', path: '/dashboard/word-tags', icon: <Tag size={20} /> },
+      { label: 'Story Emails', path: '/dashboard/emails', icon: <Mail size={20} /> },
     ],
   },
   {

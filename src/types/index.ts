@@ -191,6 +191,49 @@ export interface TagListResponse {
   size: number;
 }
 
+// ==================== Email Types ====================
+export interface EmailConfig {
+  id: number;
+  is_active: boolean;
+  timezone: string;
+  send_times: string[];
+  words_per_email: number;
+  extra_recipients: string[];
+  story_language: 'english' | 'bilingual';
+  exclude_word_ids: number[];
+  user_email: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EmailConfigUpdate {
+  is_active?: boolean;
+  timezone?: string;
+  send_times?: string[];
+  words_per_email?: number;
+  extra_recipients?: string[];
+  story_language?: string;
+  exclude_word_ids?: number[];
+}
+
+export interface StoryEmail {
+  id: number;
+  word_snapshots: { title: string; explanation: string }[];
+  story_content: string;
+  subject: string;
+  recipient_emails: string[];
+  sent_at: string;
+  status: 'pending' | 'sent' | 'failed';
+  error_message?: string | null;
+}
+
+export interface StoryEmailListResponse {
+  emails: StoryEmail[];
+  total: number;
+  page: number;
+  size: number;
+}
+
 // ==================== API Response Types ====================
 export interface ApiError {
   detail: string;
