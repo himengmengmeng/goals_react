@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { Token } from '../types';
 
-const API_BASE_URL = 'http://localhost:8001';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8001';
 
 // Create axios instance
 const api = axios.create({

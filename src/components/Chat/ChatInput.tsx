@@ -15,7 +15,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState('');
-  const [finalTranscript, setFinalTranscript] = useState('');
+  const [, setFinalTranscript] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const preRecordingInputRef = useRef('');
@@ -95,8 +95,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
       }
     };
 
-    recognition.onerror = (event) => {
-      // Ignore no-speech errors during continuous recording, just restart
+    // @ts-expect-error SpeechRecognition error event typing
+    recognition.onerror = (event: { error: string }) => {
       if (event.error === 'no-speech') return;
       console.error('[Voice] Recognition error:', event.error);
     };

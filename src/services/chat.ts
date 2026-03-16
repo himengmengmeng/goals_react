@@ -10,7 +10,7 @@ import type {
   SSEErrorEvent,
 } from '../types/chat';
 
-const API_BASE_URL = 'http://localhost:8001';
+import { API_BASE_URL } from './api';
 
 /**
  * Parse a single SSE event block (event + data lines) and dispatch to callbacks.
