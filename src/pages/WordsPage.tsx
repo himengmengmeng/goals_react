@@ -153,7 +153,7 @@ const WordsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-display text-white mb-1">English Words</h1>
+          <h1 className="text-2xl font-display text-white mb-1">Vocabulary</h1>
           <p className="text-dark-400">Manage your vocabulary collection</p>
         </div>
         <button onClick={openCreateForm} className="btn-primary">
