@@ -23,7 +23,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   isLoading = false,
 }) => {
   return (
-    <div className="w-64 flex-shrink-0 bg-dark-950 border-r border-dark-800 flex flex-col h-full">
+    <div className="absolute inset-0 z-10 w-full md:static md:inset-auto md:z-auto md:w-64 flex-shrink-0 bg-dark-950 border-r border-dark-800 flex flex-col h-full">
       {/* Header */}
       <div className="p-3 border-b border-dark-800 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-dark-300">Conversations</h3>
@@ -38,7 +38,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors lg:hidden"
+              className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors md:hidden"
             >
               <X size={16} />
             </button>

@@ -68,10 +68,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
+
   const handleSelectConversation = (id: number) => {
     if (id === activeConversationId) return;
     setActiveConversationId(id);
     loadMessages(id);
+    if (isMobile()) setShowSidebar(false);
   };
 
   const handleNewConversation = async () => {
@@ -80,6 +83,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
       setConversations((prev) => [conv, ...prev]);
       setActiveConversationId(conv.id);
       setMessages([]);
+      if (isMobile()) setShowSidebar(false);
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
@@ -247,7 +251,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -256,10 +260,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
 
       {/* Window */}
       <div
-        className={`relative flex bg-dark-900 border border-dark-700 rounded-xl shadow-2xl overflow-hidden animate-slide-up ${
+        className={`relative flex bg-dark-900 border border-dark-700 shadow-2xl overflow-hidden animate-slide-up ${
           isMaximized
             ? 'w-full h-full rounded-none'
-            : 'w-full max-w-4xl h-[75vh]'
+            : 'w-full h-full rounded-none md:max-w-4xl md:h-[75vh] md:rounded-xl'
         }`}
       >
         {/* Sidebar */}
@@ -270,6 +274,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
             onSelect={handleSelectConversation}
             onNewConversation={handleNewConversation}
             onDelete={handleDeleteConversation}
+            onClose={() => setShowSidebar(false)}
             isLoading={isLoadingConversations}
           />
         )}
