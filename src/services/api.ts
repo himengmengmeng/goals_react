@@ -1,7 +1,13 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { Token } from '../types';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8001';
+/** Empty in production build → same-origin requests behind nginx. Dev fallback: local FastAPI. */
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL !== undefined && import.meta.env.VITE_API_BASE_URL !== ''
+    ? import.meta.env.VITE_API_BASE_URL
+    : import.meta.env.DEV
+      ? 'http://localhost:8001'
+      : '';
 
 // Create axios instance
 const api = axios.create({

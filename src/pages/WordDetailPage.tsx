@@ -11,8 +11,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AxiosError } from 'axios';
 import { syncTextareaHeight } from '../utils/syncTextareaHeight';
-
-const API_BASE_URL = 'http://localhost:8001';
+import { API_BASE_URL } from '../services/api';
 
 interface FormState {
   title: string;
