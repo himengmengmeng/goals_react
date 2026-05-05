@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Save, Tag as TagIcon, Calendar } from 'lucide-react';
 import { goalsService, tagsService } from '../services';
@@ -6,6 +6,7 @@ import type { Goal, GoalUpdate, Tag } from '../types';
 import ConfirmDialog from '../components/ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AxiosError } from 'axios';
+import { syncTextareaHeight } from '../utils/syncTextareaHeight';
 
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Not Started', color: 'bg-dark-600' },
@@ -113,16 +114,10 @@ const GoalDetailPage: React.FC = () => {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
 
-  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
-  }, []);
-
-  useEffect(() => {
-    autoResize(descriptionRef.current);
-    autoResize(notesRef.current);
-  }, [formData.description, formData.notes, autoResize]);
+  useLayoutEffect(() => {
+    syncTextareaHeight(descriptionRef.current);
+    syncTextareaHeight(notesRef.current);
+  }, [formData.description, formData.notes]);
 
   const handleSave = async () => {
     if (!goal || !hasChanges) return;

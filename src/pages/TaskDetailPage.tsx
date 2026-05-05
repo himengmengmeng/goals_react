@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Save, Tag as TagIcon, Calendar, Link as LinkIcon } from 'lucide-react';
 import { tasksService, tagsService, goalsService } from '../services';
@@ -6,6 +6,7 @@ import type { Task, TaskUpdate, Tag, Goal } from '../types';
 import ConfirmDialog from '../components/ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AxiosError } from 'axios';
+import { syncTextareaHeight } from '../utils/syncTextareaHeight';
 
 const STATUS_OPTIONS = [
   { value: 'not_done', label: 'Not Done', color: 'bg-dark-600' },
@@ -114,15 +115,11 @@ const TaskDetailPage: React.FC = () => {
 
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
-  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
-  }, []);
-
-  useEffect(() => {
-    autoResize(descriptionRef.current);
-  }, [formData.description, autoResize]);
+  // useLayoutEffect: resize before paint so we never flash a collapsed textarea
+  // (which clamps scroll and causes visible jumps).
+  useLayoutEffect(() => {
+    syncTextareaHeight(descriptionRef.current);
+  }, [formData.description]);
 
   const handleSave = async () => {
     if (!task || !hasChanges) return;

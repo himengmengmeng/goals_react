@@ -203,7 +203,7 @@ const DashboardLayout: React.FC = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-6 overflow-auto [overflow-anchor:none]">
           <Outlet />
         </main>
       </div>

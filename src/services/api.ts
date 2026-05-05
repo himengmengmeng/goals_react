@@ -9,6 +9,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Serialize array params as repeated keys (e.g. ?status=a&status=b),
+  // matching FastAPI's expectation for List[...] query params.
+  paramsSerializer: { indexes: null },
 });
 
 // Token management

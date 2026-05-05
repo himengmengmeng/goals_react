@@ -8,6 +8,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Pagination from '../components/Pagination';
+import MultiSelectFilter from '../components/MultiSelectFilter';
 import { AxiosError } from 'axios';
 import clsx from 'clsx';
 
@@ -37,9 +38,9 @@ const GoalsPage: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [priorityFilter, setPriorityFilter] = useState<string>('');
-  const [tagFilter, setTagFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
+  const [tagFilter, setTagFilter] = useState<number[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -67,9 +68,9 @@ const GoalsPage: React.FC = () => {
     try {
       const skip = (page - 1) * PAGE_SIZE;
       const response = await goalsService.getAll({
-        status: statusFilter || undefined,
-        priority: priorityFilter || undefined,
-        tag_id: tagFilter ? parseInt(tagFilter) : undefined,
+        status: statusFilter.length ? statusFilter : undefined,
+        priority: priorityFilter.length ? priorityFilter : undefined,
+        tag_id: tagFilter.length ? tagFilter : undefined,
         skip,
         limit: PAGE_SIZE,
       });
@@ -197,40 +198,29 @@ const GoalsPage: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <Filter size={18} className="text-dark-400" />
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="input py-2 pr-8 min-w-[140px]"
-          >
-            <option value="">All Status</option>
-            {STATUS_OPTIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-        <select
-          value={priorityFilter}
-          onChange={(e) => setPriorityFilter(e.target.value)}
-          className="input py-2 pr-8 min-w-[140px]"
-        >
-          <option value="">All Priority</option>
-          {PRIORITY_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-        <select
-          value={tagFilter}
-          onChange={(e) => setTagFilter(e.target.value)}
-          className="input py-2 pr-8 min-w-[140px]"
-        >
-          <option value="">All Tags</option>
-          {tags.map(tag => (
-            <option key={tag.id} value={tag.id}>{tag.name}</option>
-          ))}
-        </select>
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <Filter size={18} className="text-dark-400" />
+        <MultiSelectFilter
+          label="Status"
+          options={STATUS_OPTIONS.map(o => ({ value: o.value, label: o.label }))}
+          selected={statusFilter}
+          onChange={setStatusFilter}
+          minWidth="160px"
+        />
+        <MultiSelectFilter
+          label="Priority"
+          options={PRIORITY_OPTIONS.map(o => ({ value: o.value, label: o.label }))}
+          selected={priorityFilter}
+          onChange={setPriorityFilter}
+          minWidth="160px"
+        />
+        <MultiSelectFilter
+          label="Tags"
+          options={tags.map(t => ({ value: t.id, label: t.name }))}
+          selected={tagFilter}
+          onChange={setTagFilter}
+          minWidth="160px"
+        />
       </div>
 
       {/* Goals list */}

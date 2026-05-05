@@ -2,12 +2,12 @@ import api from './api';
 import type { Task, TaskCreate, TaskUpdate, TaskListResponse, PaginationParams } from '../types';
 
 export const tasksService = {
-  // Get all tasks with pagination and filters
+  // Get all tasks with pagination and filters (arrays = multi-select)
   getAll: async (params?: PaginationParams & { 
-    status?: string; 
-    priority?: string;
-    goal_id?: number;
-    tag_id?: number;
+    status?: string[]; 
+    priority?: string[];
+    goal_id?: number[];
+    tag_id?: number[];
   }): Promise<TaskListResponse> => {
     const response = await api.get<TaskListResponse>('/api/tasks/', { params });
     return response.data;

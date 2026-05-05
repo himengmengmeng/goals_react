@@ -2,8 +2,8 @@ import api from './api';
 import type { Goal, GoalCreate, GoalUpdate, GoalListResponse, PaginationParams } from '../types';
 
 export const goalsService = {
-  // Get all goals with pagination and filters
-  getAll: async (params?: PaginationParams & { status?: string; priority?: string; tag_id?: number }): Promise<GoalListResponse> => {
+  // Get all goals with pagination and filters (arrays = multi-select)
+  getAll: async (params?: PaginationParams & { status?: string[]; priority?: string[]; tag_id?: number[] }): Promise<GoalListResponse> => {
     const response = await api.get<GoalListResponse>('/api/goals/', { params });
     return response.data;
   },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Trash2, Upload, X, Tag as TagIcon, Save,
@@ -10,6 +10,7 @@ import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AxiosError } from 'axios';
+import { syncTextareaHeight } from '../utils/syncTextareaHeight';
 
 const API_BASE_URL = 'http://localhost:8001';
 
@@ -92,16 +93,10 @@ const WordDetailPage: React.FC = () => {
   const explanationRef = useRef<HTMLTextAreaElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
 
-  const autoResize = useCallback((el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
-  }, []);
-
-  useEffect(() => {
-    autoResize(explanationRef.current);
-    autoResize(notesRef.current);
-  }, [formData.explanation, formData.notes, autoResize]);
+  useLayoutEffect(() => {
+    syncTextareaHeight(explanationRef.current);
+    syncTextareaHeight(notesRef.current);
+  }, [formData.explanation, formData.notes]);
 
   const handleSave = async () => {
     if (!word || !hasChanges) return;
