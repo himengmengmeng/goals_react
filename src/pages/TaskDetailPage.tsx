@@ -10,7 +10,7 @@ import { syncTextareaHeight } from '../utils/syncTextareaHeight';
 
 const STATUS_OPTIONS = [
   { value: 'not_done', label: 'Not Done', color: 'bg-dark-600' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-500' },
+  { value: 'ongoing', label: 'In Progress', color: 'bg-blue-500' },
   { value: 'done', label: 'Done', color: 'bg-green-500' },
 ];
 
@@ -59,11 +59,12 @@ const TaskDetailPage: React.FC = () => {
 
   const initFormFromTask = (t: Task, allTags: Tag[]) => {
     const tagIds = allTags.filter(tag => t.tags.includes(tag.name)).map(tag => tag.id).sort();
+    const rawStatus = t.status as string;
     const state: FormState = {
       name: t.name,
       description: t.description || '',
       goal_id: t.goal_id || undefined,
-      status: t.status,
+      status: rawStatus === 'in_progress' ? 'ongoing' : rawStatus,
       priority: t.priority,
       urgency: t.urgency,
       tagIds,

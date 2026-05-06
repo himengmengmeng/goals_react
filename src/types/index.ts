@@ -41,7 +41,7 @@ export interface Goal {
   title: string;
   description: string | null;
   notes: string | null;
-  status: 'not_started' | 'in_progress' | 'completed' | 'on_hold';
+  status: 'not_started' | 'in_progress' | 'blocked' | 'resolved' | 'completed' | 'on_hold';
   priority: 'low' | 'medium' | 'high';
   urgency: 'low' | 'medium' | 'high';
   creator_id: number;
@@ -82,7 +82,7 @@ export interface Task {
   name: string;
   description: string | null;
   goal_id: number | null;
-  status: 'not_done' | 'in_progress' | 'done';
+  status: 'not_done' | 'ongoing' | 'done' | 'in_progress';
   priority: 'low' | 'medium' | 'high';
   urgency: 'low' | 'medium' | 'high';
   creator_id: number;

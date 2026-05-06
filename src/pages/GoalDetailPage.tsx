@@ -11,8 +11,8 @@ import { syncTextareaHeight } from '../utils/syncTextareaHeight';
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Not Started', color: 'bg-dark-600' },
   { value: 'in_progress', label: 'In Progress', color: 'bg-blue-500' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-500' },
-  { value: 'on_hold', label: 'On Hold', color: 'bg-yellow-500' },
+  { value: 'blocked', label: 'On Hold', color: 'bg-yellow-500' },
+  { value: 'resolved', label: 'Completed', color: 'bg-green-500' },
 ];
 
 const PRIORITY_OPTIONS = [
@@ -35,6 +35,14 @@ interface FormState {
   priority: string;
   urgency: string;
   tagIds: number[];
+}
+
+/** 旧前端 completed/on_hold → 后端 resolved/blocked */
+function canonicalGoalStatusForForm(status: string): string {
+  const s = status as string;
+  if (s === 'completed') return 'resolved';
+  if (s === 'on_hold') return 'blocked';
+  return s;
 }
 
 const GoalDetailPage: React.FC = () => {
@@ -63,7 +71,7 @@ const GoalDetailPage: React.FC = () => {
       title: g.title,
       description: g.description || '',
       notes: g.notes || '',
-      status: g.status,
+      status: canonicalGoalStatusForForm(g.status as string),
       priority: g.priority,
       urgency: g.urgency,
       tagIds,

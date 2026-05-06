@@ -16,7 +16,8 @@ const PAGE_SIZE = 10;
 
 const STATUS_OPTIONS = [
   { value: 'not_done', label: 'Not Done', color: 'bg-dark-600' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-500' },
+  // 与 Django Task.STATUS_CHOICES 一致：进行中字段为 ongoing（非 in_progress）
+  { value: 'ongoing', label: 'In Progress', color: 'bg-blue-500' },
   { value: 'done', label: 'Done', color: 'bg-green-500' },
 ];
 
@@ -31,6 +32,11 @@ const URGENCY_OPTIONS = [
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' },
 ];
+
+/** 后端 Task 为 ongoing；旧数据可能仍为 in_progress */
+function canonicalTaskStatus(status: string): string {
+  return status === 'in_progress' ? 'ongoing' : status;
+}
 
 const TasksPage: React.FC = () => {
   const navigate = useNavigate();
@@ -180,7 +186,7 @@ const TasksPage: React.FC = () => {
   };
 
   const getStatusStyle = (status: string) => {
-    const option = STATUS_OPTIONS.find(o => o.value === status);
+    const option = STATUS_OPTIONS.find(o => o.value === canonicalTaskStatus(status));
     return option?.color || 'bg-dark-600';
   };
 
@@ -270,7 +276,7 @@ const TasksPage: React.FC = () => {
                         {PRIORITY_OPTIONS.find(o => o.value === task.priority)?.label} Priority
                       </span>
                       <span className="text-sm text-dark-400">
-                        {STATUS_OPTIONS.find(o => o.value === task.status)?.label}
+                        {STATUS_OPTIONS.find(o => o.value === canonicalTaskStatus(task.status))?.label}
                       </span>
                       {task.goal_title && (
                         <span className="inline-flex items-center gap-1 text-sm text-dark-300">

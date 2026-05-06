@@ -14,11 +14,12 @@ import clsx from 'clsx';
 
 const PAGE_SIZE = 10;
 
+// 与 Django Goal.STATUS_CHOICES 一致；界面文案仍用 Completed / On Hold
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Not Started', color: 'bg-dark-600' },
   { value: 'in_progress', label: 'In Progress', color: 'bg-blue-500' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-500' },
-  { value: 'on_hold', label: 'On Hold', color: 'bg-yellow-500' },
+  { value: 'blocked', label: 'On Hold', color: 'bg-yellow-500' },
+  { value: 'resolved', label: 'Completed', color: 'bg-green-500' },
 ];
 
 const PRIORITY_OPTIONS = [
@@ -32,6 +33,13 @@ const URGENCY_OPTIONS = [
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' },
 ];
+
+/** 旧前端曾用 completed / on_hold；后端存 blocked / resolved */
+function canonicalGoalStatus(status: string): string {
+  if (status === 'completed') return 'resolved';
+  if (status === 'on_hold') return 'blocked';
+  return status;
+}
 
 const GoalsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -174,7 +182,7 @@ const GoalsPage: React.FC = () => {
   };
 
   const getStatusStyle = (status: string) => {
-    const option = STATUS_OPTIONS.find(o => o.value === status);
+    const option = STATUS_OPTIONS.find(o => o.value === canonicalGoalStatus(status));
     return option?.color || 'bg-dark-600';
   };
 
@@ -257,7 +265,7 @@ const GoalsPage: React.FC = () => {
                         {PRIORITY_OPTIONS.find(o => o.value === goal.priority)?.label} Priority
                       </span>
                       <span className="text-sm text-dark-400">
-                        {STATUS_OPTIONS.find(o => o.value === goal.status)?.label}
+                        {STATUS_OPTIONS.find(o => o.value === canonicalGoalStatus(goal.status))?.label}
                       </span>
                       {goal.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2">
