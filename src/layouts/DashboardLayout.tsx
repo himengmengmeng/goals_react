@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import ChatButton from '../components/Chat/ChatButton';
+import ThemeToggle from '../components/ThemeToggle';
 
 interface NavItem {
   label: string;
@@ -82,11 +83,11 @@ const DashboardLayout: React.FC = () => {
               <div className="w-9 h-9 bg-primary-500 rounded-lg flex items-center justify-center">
                 <Target className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-display text-white">Goals</span>
+              <span className="text-xl font-display text-dark-50">Goals</span>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 text-dark-400 hover:text-white"
+              className="lg:hidden p-2 text-dark-400 hover:text-dark-50"
             >
               <X size={20} />
             </button>
@@ -111,7 +112,7 @@ const DashboardLayout: React.FC = () => {
                             'text-sm font-medium',
                             isActive
                               ? 'bg-primary-500/10 text-primary-400 border-l-2 border-primary-500 -ml-[2px] pl-[14px]'
-                              : 'text-dark-300 hover:text-white hover:bg-dark-800'
+                              : 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
                           )
                         }
                       >
@@ -145,7 +146,7 @@ const DashboardLayout: React.FC = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 -ml-2 text-dark-400 hover:text-white"
+            className="lg:hidden p-2 -ml-2 text-dark-400 hover:text-dark-50"
           >
             <Menu size={24} />
           </button>
@@ -155,6 +156,9 @@ const DashboardLayout: React.FC = () => {
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* AI Chat Button */}
           <ChatButton />
 
@@ -168,7 +172,7 @@ const DashboardLayout: React.FC = () => {
                 <User size={18} className="text-primary-400" />
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-white">{user?.username}</p>
+                <p className="text-sm font-medium text-dark-50">{user?.username}</p>
                 <p className="text-xs text-dark-400">{user?.email}</p>
               </div>
               <ChevronDown size={16} className="text-dark-400" />
@@ -183,7 +187,7 @@ const DashboardLayout: React.FC = () => {
                 />
                 <div className="absolute right-0 top-full mt-2 w-48 bg-dark-900 border border-dark-700 rounded-lg shadow-xl z-50 animate-fade-in">
                   <div className="p-3 border-b border-dark-700">
-                    <p className="text-sm font-medium text-white">{user?.first_name} {user?.last_name}</p>
+                    <p className="text-sm font-medium text-dark-50">{user?.first_name} {user?.last_name}</p>
                     <p className="text-xs text-dark-400 truncate">{user?.email}</p>
                   </div>
                   <div className="p-2">

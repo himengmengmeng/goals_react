@@ -213,7 +213,7 @@ const WordDetailPage: React.FC = () => {
     <div className="animate-fade-in max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <button onClick={() => navigate('/dashboard/words')} className="inline-flex items-center gap-2 text-dark-400 hover:text-white transition-colors">
+        <button onClick={() => navigate('/dashboard/words')} className="inline-flex items-center gap-2 text-dark-400 hover:text-dark-50 transition-colors">
           <ArrowLeft size={20} /> Back to Words
         </button>
         <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ const WordDetailPage: React.FC = () => {
       {/* Media Files Section */}
       <div className="card">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-display text-white">Media Files</h2>
+          <h2 className="text-xl font-display text-dark-50">Media Files</h2>
           <div>
             <input ref={fileInputRef} type="file" onChange={handleFileUpload} className="hidden" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx" />
             <button onClick={() => fileInputRef.current?.click()} disabled={isUploading} className="btn-primary">
@@ -352,8 +352,8 @@ const WordDetailPage: React.FC = () => {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-dark-950/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                    <button onClick={() => { setPreviewMedia(media); setIsPreviewOpen(true); }} className="p-2 bg-dark-700 hover:bg-dark-600 rounded-lg transition-colors" title="Preview"><Eye size={18} className="text-white" /></button>
-                    <button onClick={() => handleDownload(media)} className="p-2 bg-dark-700 hover:bg-dark-600 rounded-lg transition-colors" title="Download"><Download size={18} className="text-white" /></button>
+                    <button onClick={() => { setPreviewMedia(media); setIsPreviewOpen(true); }} className="p-2 bg-dark-700 hover:bg-dark-600 rounded-lg transition-colors" title="Preview"><Eye size={18} className="text-dark-50" /></button>
+                    <button onClick={() => handleDownload(media)} className="p-2 bg-dark-700 hover:bg-dark-600 rounded-lg transition-colors" title="Download"><Download size={18} className="text-dark-50" /></button>
                     <button onClick={() => { setSelectedMedia(media); setIsDeleteMediaOpen(true); }} className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-colors" title="Delete"><X size={18} className="text-red-400" /></button>
                   </div>
                 </div>

@@ -175,7 +175,7 @@ const TaskDetailPage: React.FC = () => {
     <div className="animate-fade-in max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <button onClick={() => navigate('/dashboard/tasks')} className="inline-flex items-center gap-2 text-dark-400 hover:text-white transition-colors">
+        <button onClick={() => navigate('/dashboard/tasks')} className="inline-flex items-center gap-2 text-dark-400 hover:text-dark-50 transition-colors">
           <ArrowLeft size={20} /> Back to Tasks
         </button>
         <div className="flex items-center gap-2">

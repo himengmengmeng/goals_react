@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-950">
-        <div className="spinner w-8 h-8"></div>
+        <div className="spinner w-8 h-8" />
       </div>
     );
   }
@@ -39,7 +39,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-950">
-        <div className="spinner w-8 h-8"></div>
+        <div className="spinner w-8 h-8" />
       </div>
     );
   }

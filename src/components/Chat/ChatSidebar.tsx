@@ -30,7 +30,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         <div className="flex items-center gap-1">
           <button
             onClick={onNewConversation}
-            className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors"
+            className="p-1.5 text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded-lg transition-colors"
             title="New conversation"
           >
             <Plus size={16} />
@@ -38,7 +38,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors md:hidden"
+              className="p-1.5 text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded-lg transition-colors md:hidden"
             >
               <X size={16} />
             </button>
@@ -64,7 +64,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
               className={clsx(
                 'group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-colors',
                 activeConversationId === conv.id
-                  ? 'bg-dark-800 text-white'
+                  ? 'bg-dark-800 text-dark-50'
                   : 'text-dark-400 hover:bg-dark-800/50 hover:text-dark-200'
               )}
               onClick={() => onSelect(conv.id)}

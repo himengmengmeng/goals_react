@@ -153,7 +153,7 @@ const WordsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-display text-white mb-1">Vocabulary</h1>
+          <h1 className="text-2xl font-display text-dark-50 mb-1">Vocabulary</h1>
           <p className="text-dark-400">Manage your vocabulary collection</p>
         </div>
         <button onClick={openCreateForm} className="btn-primary">
@@ -208,7 +208,7 @@ const WordsPage: React.FC = () => {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-white mb-2">{word.title}</h3>
+                    <h3 className="text-lg font-semibold text-dark-50 mb-2">{word.title}</h3>
                     <p className="text-dark-300 mb-3 line-clamp-2">{word.explanation}</p>
                     {word.notes && (
                       <p className="text-sm text-dark-400 italic mb-3 line-clamp-1">"{word.notes}"</p>

@@ -2,9 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme color variables (RGB channels for Tailwind opacity support) */
+:root {
+  --dark-50: 17 24 39;
+  --dark-100: 31 41 55;
+  --dark-200: 55 65 81;
+  --dark-300: 75 85 99;
+  --dark-400: 107 114 128;
+  --dark-500: 156 163 175;
+  --dark-600: 209 213 219;
+  --dark-700: 229 231 235;
+  --dark-800: 243 244 246;
+  --dark-900: 255 255 255;
+  --dark-950: 249 250 251;
+}
+
+:root.dark {
+  --dark-50: 246 246 247;
+  --dark-100: 226 227 229;
+  --dark-200: 196 198 203;
+  --dark-300: 159 162 169;
+  --dark-400: 122 126 135;
+  --dark-500: 95 99 108;
+  --dark-600: 75 78 86;
+  --dark-700: 62 65 71;
+  --dark-800: 53 55 60;
+  --dark-900: 30 31 35;
+  --dark-950: 18 19 22;
+}
+
 @layer base {
   * {
-    @apply border-dark-200;
+    @apply border-dark-700;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease, box-shadow 0.3s ease !important;
   }
   
   body {
@@ -13,7 +57,7 @@
   }
   
   ::selection {
-    @apply bg-primary-500/30 text-white;
+    @apply bg-primary-500/30 text-dark-50;
   }
 }
 
@@ -36,7 +80,7 @@
   }
   
   .btn-ghost {
-    @apply btn bg-transparent text-dark-300 hover:text-white hover:bg-dark-800
+    @apply btn bg-transparent text-dark-300 hover:text-dark-50 hover:bg-dark-800
            focus:ring-dark-600;
   }
   
@@ -96,11 +140,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-dark-900;
+  background: rgb(var(--dark-950));
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-dark-700 rounded-full hover:bg-dark-600;
+  background: rgb(var(--dark-700));
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--dark-600));
 }
 
 /* Loading spinner */

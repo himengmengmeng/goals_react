@@ -166,7 +166,7 @@ const EmailPage: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
+        <h1 className="text-2xl font-display font-bold text-dark-50 flex items-center gap-3">
           <Mail className="text-primary-400" size={28} />
           Story Emails
         </h1>
@@ -190,7 +190,7 @@ const EmailPage: React.FC = () => {
       {/* Configuration Panel */}
       <div className="card p-6 space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Schedule Configuration</h2>
+          <h2 className="text-lg font-semibold text-dark-50">Schedule Configuration</h2>
           <label className="relative inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
@@ -358,7 +358,7 @@ const EmailPage: React.FC = () => {
 
       {/* Email History */}
       <div className="card p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Email History</h2>
+        <h2 className="text-lg font-semibold text-dark-50 mb-4">Email History</h2>
 
         {isLoadingHistory ? (
           <LoadingSpinner />
@@ -421,7 +421,7 @@ const EmailCard: React.FC<EmailCardProps> = ({ email, isExpanded, onToggle }) =>
           <span className={`px-2 py-0.5 text-xs rounded-full border ${statusColors[email.status]}`}>
             {email.status}
           </span>
-          <span className="text-sm text-white truncate">{email.subject}</span>
+          <span className="text-sm text-dark-50 truncate">{email.subject}</span>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <span className="text-xs text-dark-400">
@@ -450,7 +450,7 @@ const EmailCard: React.FC<EmailCardProps> = ({ email, isExpanded, onToggle }) =>
           <div>
             <h4 className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-2">Story</h4>
             <div
-              className="text-sm text-dark-200 leading-relaxed bg-dark-900 p-4 rounded-lg prose prose-invert max-w-none"
+              className="text-sm text-dark-200 leading-relaxed bg-dark-900 p-4 rounded-lg prose dark:prose-invert max-w-none"
               dangerouslySetInnerHTML={{
                 __html: email.story_content
                   .replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary-400">$1</strong>')

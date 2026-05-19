@@ -73,7 +73,7 @@ const Pagination: React.FC<PaginationProps> = ({
           className={clsx(
             'p-2 rounded-lg transition-colors',
             canGoPrevious
-              ? 'text-dark-300 hover:text-white hover:bg-dark-800'
+              ? 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
               : 'text-dark-600 cursor-not-allowed'
           )}
           title="First page"
@@ -88,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
           className={clsx(
             'p-2 rounded-lg transition-colors',
             canGoPrevious
-              ? 'text-dark-300 hover:text-white hover:bg-dark-800'
+              ? 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
               : 'text-dark-600 cursor-not-allowed'
           )}
           title="Previous page"
@@ -107,7 +107,7 @@ const Pagination: React.FC<PaginationProps> = ({
                   'min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-colors',
                   page === currentPage
                     ? 'bg-primary-600 text-white'
-                    : 'text-dark-300 hover:text-white hover:bg-dark-800'
+                    : 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
                 )}
               >
                 {page}
@@ -127,7 +127,7 @@ const Pagination: React.FC<PaginationProps> = ({
           className={clsx(
             'p-2 rounded-lg transition-colors',
             canGoNext
-              ? 'text-dark-300 hover:text-white hover:bg-dark-800'
+              ? 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
               : 'text-dark-600 cursor-not-allowed'
           )}
           title="Next page"
@@ -142,7 +142,7 @@ const Pagination: React.FC<PaginationProps> = ({
           className={clsx(
             'p-2 rounded-lg transition-colors',
             canGoNext
-              ? 'text-dark-300 hover:text-white hover:bg-dark-800'
+              ? 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
               : 'text-dark-600 cursor-not-allowed'
           )}
           title="Last page"

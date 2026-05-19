@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, ArrowRight, Target, ArrowLeft, CheckCircle } from 'lucide-react';
 import { AxiosError } from 'axios';
+import ThemeToggle from '../components/ThemeToggle';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -72,12 +73,12 @@ const RegisterPage: React.FC = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-dark-950 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-dark-950 flex items-center justify-center p-8 relative">
         <div className="text-center animate-slide-up">
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-green-400" />
           </div>
-          <h2 className="text-2xl font-display text-white mb-2">Registration Successful!</h2>
+          <h2 className="text-2xl font-display text-dark-50 mb-2">Registration Successful!</h2>
           <p className="text-dark-400">Redirecting to login page...</p>
         </div>
       </div>
@@ -85,7 +86,12 @@ const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-dark-950 flex">
+    <div className="min-h-screen bg-dark-950 flex relative">
+      {/* Theme toggle */}
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         {/* Gradient background */}
@@ -101,10 +107,10 @@ const RegisterPage: React.FC = () => {
             <div className="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center">
               <Target className="w-7 h-7 text-white" />
             </div>
-            <span className="text-3xl font-display text-white">Goals</span>
+            <span className="text-3xl font-display text-dark-50">Goals</span>
           </div>
           
-          <h1 className="text-5xl font-display text-white mb-6 leading-tight">
+          <h1 className="text-5xl font-display text-dark-50 mb-6 leading-tight">
             Start your journey<br />
             <span className="text-primary-400">to success today.</span>
           </h1>
@@ -135,7 +141,7 @@ const RegisterPage: React.FC = () => {
           {/* Back to login */}
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 text-dark-400 hover:text-white transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-dark-400 hover:text-dark-50 transition-colors mb-6"
           >
             <ArrowLeft size={18} />
             <span>Back to login</span>
@@ -146,11 +152,11 @@ const RegisterPage: React.FC = () => {
             <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
               <Target className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-display text-white">Goals</span>
+            <span className="text-2xl font-display text-dark-50">Goals</span>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-3xl font-display text-white mb-2">Create account</h2>
+            <h2 className="text-3xl font-display text-dark-50 mb-2">Create account</h2>
             <p className="text-dark-400">Fill in your details to get started</p>
           </div>
 

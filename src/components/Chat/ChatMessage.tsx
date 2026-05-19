@@ -87,7 +87,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           {isHuman ? (
             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
           ) : (
-            <div className="text-sm prose prose-invert prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_pre]:my-2 [&_code]:text-emerald-300 [&_code]:bg-dark-900/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre_code]:bg-transparent [&_pre_code]:p-0">
+            <div className="text-sm prose dark:prose-invert prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_pre]:my-2 [&_code]:text-emerald-600 dark:[&_code]:text-emerald-300 [&_code]:bg-dark-900/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre_code]:bg-transparent [&_pre_code]:p-0">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {message.content || (message.isStreaming ? '...' : '')}
               </ReactMarkdown>

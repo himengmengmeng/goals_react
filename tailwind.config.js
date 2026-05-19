@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -21,17 +22,17 @@ export default {
           950: '#082849',
         },
         dark: {
-          50: '#f6f6f7',
-          100: '#e2e3e5',
-          200: '#c4c6cb',
-          300: '#9fa2a9',
-          400: '#7a7e87',
-          500: '#5f636c',
-          600: '#4b4e56',
-          700: '#3e4147',
-          800: '#35373c',
-          900: '#1e1f23',
-          950: '#121316',
+          50: 'rgb(var(--dark-50) / <alpha-value>)',
+          100: 'rgb(var(--dark-100) / <alpha-value>)',
+          200: 'rgb(var(--dark-200) / <alpha-value>)',
+          300: 'rgb(var(--dark-300) / <alpha-value>)',
+          400: 'rgb(var(--dark-400) / <alpha-value>)',
+          500: 'rgb(var(--dark-500) / <alpha-value>)',
+          600: 'rgb(var(--dark-600) / <alpha-value>)',
+          700: 'rgb(var(--dark-700) / <alpha-value>)',
+          800: 'rgb(var(--dark-800) / <alpha-value>)',
+          900: 'rgb(var(--dark-900) / <alpha-value>)',
+          950: 'rgb(var(--dark-950) / <alpha-value>)',
         }
       },
       fontFamily: {

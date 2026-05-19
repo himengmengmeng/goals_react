@@ -181,7 +181,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               value={input}
               readOnly
               rows={1}
-              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-red-500/30 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none leading-[18px] block"
+              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-red-500/30 rounded-xl text-sm text-dark-50 placeholder-dark-500 resize-none focus:outline-none leading-[18px] block"
               style={{ maxHeight: '120px' }}
               placeholder="Listening..."
             />
@@ -202,7 +202,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               <button
                 onClick={startRecording}
                 disabled={disabled}
-                className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center rounded-lg text-dark-400 hover:text-white hover:bg-dark-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center rounded-lg text-dark-400 hover:text-dark-50 hover:bg-dark-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Voice input"
               >
                 <Mic size={18} />
@@ -218,7 +218,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               placeholder={placeholder}
               disabled={disabled}
               rows={1}
-              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-dark-700 rounded-xl text-sm text-white placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed leading-[18px] block"
+              className="flex-1 min-w-0 min-h-[34px] m-0 px-3 py-[7px] bg-dark-800 border border-dark-700 rounded-xl text-sm text-dark-50 placeholder-dark-500 resize-none focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed leading-[18px] block"
               style={{ maxHeight: '120px' }}
             />
 

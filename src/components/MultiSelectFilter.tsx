@@ -101,7 +101,7 @@ function MultiSelectFilter<T extends string | number>({
                   handleClear(e as unknown as React.MouseEvent);
                 }
               }}
-              className="p-0.5 text-dark-400 hover:text-white hover:bg-dark-700 rounded transition-colors"
+              className="p-0.5 text-dark-400 hover:text-dark-50 hover:bg-dark-700 rounded transition-colors"
               title="Clear"
             >
               <X size={14} />
@@ -129,7 +129,7 @@ function MultiSelectFilter<T extends string | number>({
                   className={clsx(
                     'w-full flex items-center gap-2 px-3 py-2 text-sm text-left',
                     'hover:bg-dark-800 transition-colors',
-                    isSelected ? 'text-white' : 'text-dark-200'
+                    isSelected ? 'text-dark-50' : 'text-dark-200'
                   )}
                 >
                   <span
@@ -152,7 +152,7 @@ function MultiSelectFilter<T extends string | number>({
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="w-full px-2 py-1.5 text-xs text-dark-400 hover:text-white hover:bg-dark-800 rounded transition-colors text-left"
+                className="w-full px-2 py-1.5 text-xs text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded transition-colors text-left"
               >
                 Clear selection
               </button>

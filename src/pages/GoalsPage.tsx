@@ -207,7 +207,7 @@ const GoalsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-display text-white mb-1">Goals</h1>
+          <h1 className="text-2xl font-display text-dark-50 mb-1">Goals</h1>
           <p className="text-dark-400">Track and manage your personal goals</p>
         </div>
         <button onClick={openCreateForm} className="btn-primary">
@@ -280,7 +280,7 @@ const GoalsPage: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2">
                       <span className={clsx('w-2.5 h-2.5 rounded-full', getStatusStyle(goal.status))} />
-                      <h3 className="text-lg font-semibold text-white">{goal.title}</h3>
+                      <h3 className="text-lg font-semibold text-dark-50">{goal.title}</h3>
                     </div>
                     {goal.description && (
                       <p className="text-dark-300 mb-3 ml-5">{goal.description}</p>

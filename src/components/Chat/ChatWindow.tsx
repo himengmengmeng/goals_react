@@ -286,12 +286,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowSidebar(!showSidebar)}
-                className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors"
+                className="p-1.5 text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded-lg transition-colors"
                 title={showSidebar ? 'Hide sidebar' : 'Show sidebar'}
               >
                 {showSidebar ? <PanelLeftClose size={16} /> : <PanelLeft size={16} />}
               </button>
-              <h2 className="text-sm font-medium text-white truncate">
+              <h2 className="text-sm font-medium text-dark-50 truncate">
                 {activeConversationId
                   ? conversations.find((c) => c.id === activeConversationId)?.name || 'New Chat'
                   : 'XMeng'}
@@ -300,13 +300,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsMaximized(!isMaximized)}
-                className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors"
+                className="p-1.5 text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded-lg transition-colors"
               >
                 {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
               <button
                 onClick={onClose}
-                className="p-1.5 text-dark-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors"
+                className="p-1.5 text-dark-400 hover:text-dark-50 hover:bg-dark-800 rounded-lg transition-colors"
               >
                 <X size={16} />
               </button>
@@ -328,7 +328,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose }) => {
                       <path d="M10 22h4" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-white mb-2">XMeng</h3>
+                  <h3 className="text-lg font-medium text-dark-50 mb-2">XMeng</h3>
                   <p className="text-sm text-dark-400">
                     Ask me anything! I can help you manage goals, tasks, and vocabulary, or just chat.
                   </p>

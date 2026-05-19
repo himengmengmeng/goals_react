@@ -110,7 +110,7 @@ const GoalTagsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-display text-white mb-1">Goal Tags</h1>
+          <h1 className="text-2xl font-display text-dark-50 mb-1">Goal Tags</h1>
           <p className="text-dark-400">Organize your goals and tasks with tags</p>
         </div>
         <button onClick={openCreateForm} className="btn-primary">
@@ -155,7 +155,7 @@ const GoalTagsPage: React.FC = () => {
                     <div className="w-10 h-10 bg-primary-500/10 rounded-lg flex items-center justify-center">
                       <TagIcon className="w-5 h-5 text-primary-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white truncate">{tag.name}</h3>
+                    <h3 className="text-lg font-semibold text-dark-50 truncate">{tag.name}</h3>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-dark-400">
                     <span className="inline-flex items-center gap-1">

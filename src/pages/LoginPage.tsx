@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, ArrowRight, Target } from 'lucide-react';
 import { AxiosError } from 'axios';
+import ThemeToggle from '../components/ThemeToggle';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +40,12 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-950 flex">
+    <div className="min-h-screen bg-dark-950 flex relative">
+      {/* Theme toggle */}
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         {/* Gradient background */}
@@ -55,10 +61,10 @@ const LoginPage: React.FC = () => {
             <div className="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center">
               <Target className="w-7 h-7 text-white" />
             </div>
-            <span className="text-3xl font-display text-white">Goals</span>
+            <span className="text-3xl font-display text-dark-50">Goals</span>
           </div>
           
-          <h1 className="text-5xl font-display text-white mb-6 leading-tight">
+          <h1 className="text-5xl font-display text-dark-50 mb-6 leading-tight">
             Track your goals.<br />
             <span className="text-primary-400">Master your vocabulary.</span>
           </h1>
@@ -91,11 +97,11 @@ const LoginPage: React.FC = () => {
             <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
               <Target className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-display text-white">Goals</span>
+            <span className="text-2xl font-display text-dark-50">Goals</span>
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-display text-white mb-2">Welcome back</h2>
+            <h2 className="text-3xl font-display text-dark-50 mb-2">Welcome back</h2>
             <p className="text-dark-400">Sign in to continue to your dashboard</p>
           </div>
 
