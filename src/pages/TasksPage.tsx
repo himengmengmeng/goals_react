@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, CheckSquare, Tag as TagIcon, Filter, Link as LinkIcon } from 'lucide-react';
+import { Plus, Trash2, CheckSquare, Tag as TagIcon, Filter, Link as LinkIcon, Search } from 'lucide-react';
 import { tasksService, tagsService, goalsService } from '../services';
 import type { Task, TaskCreate, Tag, Goal } from '../types';
 import Modal from '../components/Modal';
@@ -44,6 +44,8 @@ const TasksPage: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
   const [goalFilter, setGoalFilter] = useState<number[]>([]);
@@ -75,6 +77,7 @@ const TasksPage: React.FC = () => {
     try {
       const skip = (page - 1) * PAGE_SIZE;
       const response = await tasksService.getAll({
+        search: debouncedSearch.trim() || undefined,
         status: statusFilter.length ? statusFilter : undefined,
         priority: priorityFilter.length ? priorityFilter : undefined,
         goal_id: goalFilter.length ? goalFilter : undefined,
@@ -90,7 +93,7 @@ const TasksPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, goalFilter, tagFilter, currentPage]);
+  }, [debouncedSearch, statusFilter, priorityFilter, goalFilter, tagFilter, currentPage]);
 
   // Fetch tags and goals
   const fetchTagsAndGoals = async () => {
@@ -114,11 +117,19 @@ const TasksPage: React.FC = () => {
     fetchTasks(currentPage);
   }, [currentPage, fetchTasks]);
 
-  // Reset to page 1 when filters change
+  // Debounce search input (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Reset to page 1 when filters or search change
   useEffect(() => {
     setCurrentPage(1);
     fetchTasks(1);
-  }, [statusFilter, priorityFilter, goalFilter, tagFilter]);
+  }, [debouncedSearch, statusFilter, priorityFilter, goalFilter, tagFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -207,6 +218,20 @@ const TasksPage: React.FC = () => {
           <Plus size={20} />
           Add Task
         </button>
+      </div>
+
+      {/* Search */}
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tasks by name or description..."
+            className="input pl-12"
+          />
+        </div>
       </div>
 
       {/* Filters */}

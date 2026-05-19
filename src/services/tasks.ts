@@ -3,8 +3,9 @@ import type { Task, TaskCreate, TaskUpdate, TaskListResponse, PaginationParams }
 
 export const tasksService = {
   // Get all tasks with pagination and filters (arrays = multi-select)
-  getAll: async (params?: PaginationParams & { 
-    status?: string[]; 
+  getAll: async (params?: PaginationParams & {
+    search?: string;
+    status?: string[];
     priority?: string[];
     goal_id?: number[];
     tag_id?: number[];

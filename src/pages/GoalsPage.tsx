@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Target, Tag as TagIcon, Filter } from 'lucide-react';
+import { Plus, Trash2, Target, Tag as TagIcon, Filter, Search } from 'lucide-react';
 import { goalsService, tagsService } from '../services';
 import type { Goal, GoalCreate, Tag } from '../types';
 import Modal from '../components/Modal';
@@ -46,6 +46,8 @@ const GoalsPage: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
   const [tagFilter, setTagFilter] = useState<number[]>([]);
@@ -76,6 +78,7 @@ const GoalsPage: React.FC = () => {
     try {
       const skip = (page - 1) * PAGE_SIZE;
       const response = await goalsService.getAll({
+        search: debouncedSearch.trim() || undefined,
         status: statusFilter.length ? statusFilter : undefined,
         priority: priorityFilter.length ? priorityFilter : undefined,
         tag_id: tagFilter.length ? tagFilter : undefined,
@@ -90,7 +93,7 @@ const GoalsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, priorityFilter, tagFilter, currentPage]);
+  }, [debouncedSearch, statusFilter, priorityFilter, tagFilter, currentPage]);
 
   // Fetch tags
   const fetchTags = async () => {
@@ -110,11 +113,19 @@ const GoalsPage: React.FC = () => {
     fetchGoals(currentPage);
   }, [currentPage, fetchGoals]);
 
-  // Reset to page 1 when filters change
+  // Debounce search input (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Reset to page 1 when filters or search change
   useEffect(() => {
     setCurrentPage(1);
     fetchGoals(1);
-  }, [statusFilter, priorityFilter, tagFilter]);
+  }, [debouncedSearch, statusFilter, priorityFilter, tagFilter]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -203,6 +214,20 @@ const GoalsPage: React.FC = () => {
           <Plus size={20} />
           Add Goal
         </button>
+      </div>
+
+      {/* Search */}
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search goals by title, description, notes..."
+            className="input pl-12"
+          />
+        </div>
       </div>
 
       {/* Filters */}
